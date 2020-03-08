@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Open Data Contest</title>
+    <style>
+      html, body, #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+  
+    <link rel="stylesheet" href="https://js.arcgis.com/4.14/esri/css/main.css">
+    <script src="https://js.arcgis.com/4.14/"></script>
+  
+    <script>
+
+      require([
+        "esri/Map",
+        "esri/views/MapView",
+        "esri/layers/FeatureLayer"
+      ], function(Map, MapView, FeatureLayer) {
+  
+        var map = new Map({
+          basemap: "dark-gray"
+        });
+  
+        var view = new MapView({
+          container: "viewDiv",
+          map: map,
+          center: [-63.582687,44.651070],
+          zoom: 8
+        });
+
+        var featureLayer = new FeatureLayer({
+          url: "https://services7.arcgis.com/Z7219KqTMDztcocj/arcgis/rest/services/mu_econohealth/FeatureServer"
+        });
+
+        map.add(featureLayer);
+
+        var popupTestheads = {
+          "title": "{MUNICIPALITY}",
+          "content": "<b>Population:</b> {POPULATION} <br> <b>Single Household:</b> {SINGLE_HOUSEHOLD} <br><b>Families (One child):</b> {FAMILY_ONE_CHILD} <br><b>Families (2 or more children):</b> {FAMILY_MULTICHILD} <br><b>Families (No children):</b> {FAMILY_NO_CHILD} <br><b>No. of Immigrants:</b> {IMMIGRATION} <br><b>No. of Citizens:</b> {CITIZENS}"
+        }
+
+        var testheads = new FeatureLayer({
+          url: "https://services7.arcgis.com/Z7219KqTMDztcocj/arcgis/rest/services/mu_econohealth/FeatureServer",
+          outFields: ["MUNICIPALITY","POPULATION","SINGLE_HOUSEHOLD", "FAMILY_ONE_CHILD", "FAMILY_MULTICHILD", "FAMILY_NO_CHILD", "IMMIGRATION", "CITIZEN"],
+          popupTemplate: popupTestheads
+        });
+
+        map.add(testheads);
+        
+  
+      });
+    </script>
+  </head>
+  <body>
+    <div id="viewDiv"></div>
+  </body>
+</html>
